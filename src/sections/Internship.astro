@@ -1,0 +1,201 @@
+---
+import SectionHeading from '../components/SectionHeading.astro';
+import Placeholder from '../components/Placeholder.astro';
+import Arrow from '../components/Arrow.astro';
+import { profile } from '../data/profile';
+import { url } from '../lib/url';
+
+const s = profile.internship;
+
+const header = [
+  { label: 'Entreprise', value: s.company, placeholder: 'Nom de l’entreprise' },
+  { label: 'Secteur', value: s.sector, placeholder: 'Secteur d’activité' },
+  { label: 'Lieu', value: s.location, placeholder: 'Ville' },
+  { label: 'Période', value: s.period, placeholder: 'Dates du stage' },
+  { label: 'Durée', value: s.duration, placeholder: 'Durée' },
+];
+
+const lists = [
+  { title: 'Missions', items: s.missions, placeholder: 'Missions confiées pendant le stage' },
+  { title: 'Réalisations', items: s.achievements, placeholder: 'Réalisations concrètes' },
+  { title: 'Technologies', items: s.technologies, placeholder: 'Outils et technologies utilisés', tags: true },
+];
+---
+
+<section id="stage" class="section" aria-labelledby="internship-title">
+  <div class="container">
+    <SectionHeading
+      number="04"
+      title="Stage en entreprise"
+      id="internship-title"
+      intro="Stage de première année réalisé dans le cadre du BTS SIO, sur un projet concret pour une entreprise."
+    />
+
+    <div class="internship">
+      <header class="internship__head" data-reveal>
+        <h3 class="internship__role">
+          {s.role ? s.role : <Placeholder text="Intitulé du stage" />}
+        </h3>
+        <dl class="internship__facts">
+          {
+            header.map((f) => (
+              <div>
+                <dt>{f.label}</dt>
+                <dd>{f.value ? f.value : <Placeholder text={f.placeholder} />}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </header>
+
+      <div class="internship__summary" data-reveal data-reveal-delay="80">
+        {
+          s.summary ? (
+            <p>{s.summary}</p>
+          ) : (
+            <p>
+              <Placeholder text="Présentation du contexte du stage : l’entreprise, le service, le rôle occupé et les objectifs fixés." />
+            </p>
+          )
+        }
+      </div>
+
+      <div class="internship__grid">
+        {
+          lists.map((block, i) => (
+            <div class="internship__block" data-reveal data-reveal-delay={String(120 + i * 80)}>
+              <h4>{block.title}</h4>
+              {block.items.length === 0 ? (
+                <p>
+                  <Placeholder text={block.placeholder} />
+                </p>
+              ) : block.tags ? (
+                <ul class="tag-list">
+                  {block.items.map((item) => (
+                    <li class="tag">{item}</li>
+                  ))}
+                </ul>
+              ) : (
+                <ul class="internship__list">
+                  {block.items.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))
+        }
+
+        <div class="internship__block internship__block--wide" data-reveal data-reveal-delay="360">
+          <h4>Résultats et apports</h4>
+          {
+            s.results ? (
+              <p>{s.results}</p>
+            ) : (
+              <p>
+                <Placeholder text="Résultats obtenus, retours de l’entreprise et compétences développées." />
+              </p>
+            )
+          }
+        </div>
+      </div>
+
+      {
+        s.projectId && (
+          <p class="internship__more" data-reveal>
+            <a class="action action--ghost" href={url(`/projets/${s.projectId}/`)}>
+              Lire la fiche détaillée du projet <Arrow />
+            </a>
+          </p>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .internship {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .internship__head {
+    display: grid;
+    gap: var(--space-5);
+    padding: var(--space-5) var(--space-6);
+    border: 1px solid var(--line);
+    border-radius: var(--petal-radius);
+    background: var(--paper-2);
+  }
+
+  .internship__role {
+    font-size: var(--text-lg);
+  }
+
+  .internship__facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: var(--space-4);
+  }
+
+  .internship__more {
+    margin-top: var(--space-2);
+  }
+
+  .internship__facts dt {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  .internship__facts dd {
+    margin: 0.15rem 0 0;
+    color: var(--ink);
+  }
+
+  .internship__summary {
+    max-width: var(--measure);
+  }
+
+  .internship__grid {
+    display: grid;
+    gap: var(--space-6) var(--space-8);
+  }
+
+  .internship__block {
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .internship__block h4 {
+    margin-bottom: var(--space-3);
+  }
+
+  .internship__list {
+    padding-left: 1.2em;
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .internship__list li::marker {
+    color: var(--clay-soft);
+  }
+
+  @media (min-width: 40em) {
+    .internship__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .internship__block--wide {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (min-width: 64em) {
+    .internship__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

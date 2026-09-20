@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Placeholder from '../components/Placeholder.astro';
+import { profile } from '../data/profile';
+---
+
+<BaseLayout title="Mentions légales" description={`Mentions légales du portfolio de ${profile.name}.`}>
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow">Informations</p>
+      <h1 class="legal__title">Mentions légales</h1>
+
+      <div class="prose legal__body">
+        <h2>Éditrice du site</h2>
+        <p>
+          Ce site est un portfolio personnel publié par {profile.name}, étudiante en BTS SIO (option SISR) au
+          {profile.school} de {profile.city}. Il a une vocation exclusivement pédagogique et professionnelle
+          (présentation de parcours, de compétences et de projets).
+        </p>
+        <p>
+          Contact : {
+            profile.contact.find((c) => c.value)?.value ?? <Placeholder text="adresse de contact à renseigner" />
+          }
+        </p>
+
+        <h2>Hébergement</h2>
+        <p>
+          {
+            profile.legal.host ? (
+              profile.legal.host
+            ) : (
+              <Placeholder text="Nom et coordonnées de l’hébergeur à renseigner une fois le site mis en ligne (voir DEPLOIEMENT.md)." />
+            )
+          }
+        </p>
+
+        <h2>Données personnelles</h2>
+        <p>
+          Ce site est entièrement statique. Il ne dépose aucun cookie, n’intègre aucun outil de mesure
+          d’audience et ne collecte aucune donnée personnelle. Les polices de caractères sont hébergées avec
+          le site : aucune requête n’est envoyée vers un service tiers lors de la consultation des pages.
+        </p>
+
+        <h2>Propriété intellectuelle</h2>
+        <p>
+          Les textes et les visuels de ce site sont la propriété de {profile.name}, sauf mention contraire.
+          Les polices Fraunces et Mulish sont distribuées sous licence SIL Open Font License.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .legal__title {
+    margin-top: var(--space-2);
+    font-size: var(--text-xl);
+  }
+
+  .legal__body {
+    margin-top: var(--space-6);
+  }
+</style>

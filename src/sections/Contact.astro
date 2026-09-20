@@ -1,0 +1,144 @@
+---
+import SectionHeading from '../components/SectionHeading.astro';
+import Placeholder from '../components/Placeholder.astro';
+import Petals from '../components/Petals.astro';
+import Arrow from '../components/Arrow.astro';
+import { profile } from '../data/profile';
+import { url } from '../lib/url';
+
+const channels = profile.contact;
+---
+
+<section id="contact" class="section contact" aria-labelledby="contact-title">
+  <Petals />
+  <div class="container contact__inner">
+    <SectionHeading number="06" title="Contact" id="contact-title" />
+
+    <div class="contact__grid">
+      <p class="contact__lead" data-reveal>
+        Vous souhaitez échanger sur mon parcours, mes projets ou une opportunité&nbsp;?
+        <em>N’hésitez pas à me contacter.</em>
+      </p>
+
+      <div data-reveal data-reveal-delay="120">
+        {
+          channels.length === 0 ? (
+            <p>
+              <Placeholder text="Coordonnées à renseigner dans src/data/profile.ts" />
+            </p>
+          ) : (
+            <ul class="channels list-plain">
+              {channels.map((c) => (
+                <li class="channels__item">
+                  <span class="channels__label">{c.label}</span>
+                  <span class="channels__value">
+                    {c.value ? (
+                      c.href ? (
+                        <a href={c.href} rel={c.href.startsWith('http') ? 'noopener' : undefined}>
+                          {c.value}
+                        </a>
+                      ) : (
+                        c.value
+                      )
+                    ) : (
+                      <Placeholder text="À compléter" />
+                    )}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+
+        {
+          profile.cvUrl && (
+            <p class="contact__cv">
+              <a class="action action--ghost" href={url(profile.cvUrl)} download>
+                Télécharger mon CV <Arrow direction="down" />
+              </a>
+            </p>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact {
+    overflow: hidden;
+  }
+
+  .contact__inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  .contact__grid {
+    display: grid;
+    gap: var(--space-6);
+    align-items: start;
+  }
+
+  .contact__lead {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 400;
+    font-variation-settings: 'opsz' 48;
+    line-height: 1.25;
+    max-width: 22ch;
+  }
+
+  .contact__lead em {
+    color: var(--clay);
+  }
+
+  .channels {
+    display: grid;
+  }
+
+  .channels__item {
+    display: grid;
+    grid-template-columns: 7rem minmax(0, 1fr);
+    gap: var(--space-3);
+    padding-block: var(--space-4);
+    border-top: 1px solid var(--line);
+  }
+
+  .channels__item:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .channels__label {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    padding-top: 0.35em;
+  }
+
+  .channels__value {
+    font-size: var(--text-md);
+    word-break: break-word;
+  }
+
+  .channels__value a {
+    color: var(--ink);
+  }
+
+  .channels__value a:hover {
+    color: var(--clay);
+  }
+
+  .contact__cv {
+    margin-top: var(--space-5);
+  }
+
+  @media (min-width: 48em) {
+    .contact__grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--space-8);
+    }
+  }
+</style>

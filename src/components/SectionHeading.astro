@@ -1,0 +1,56 @@
+---
+/**
+ * En-tête de section éditorial : numéro en italique, filet, titre et
+ * éventuelle phrase d'introduction.
+ */
+interface Props {
+  number: string;
+  title: string;
+  /** Identifiant du titre (utilisé par aria-labelledby de la section) */
+  id: string;
+  intro?: string;
+}
+const { number, title, id, intro } = Astro.props;
+---
+
+<div class="section-heading" data-reveal>
+  <div class="section-heading__row">
+    <span class="section-heading__number" aria-hidden="true">{number}</span>
+    <span class="section-heading__rule" aria-hidden="true"></span>
+  </div>
+  <h2 id={id}>{title}</h2>
+  {intro && <p class="section-heading__intro lede">{intro}</p>}
+</div>
+
+<style>
+  .section-heading {
+    margin-bottom: var(--space-7);
+  }
+
+  .section-heading__row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+  }
+
+  .section-heading__number {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: var(--text-md);
+    color: var(--clay);
+    letter-spacing: 0.02em;
+  }
+
+  .section-heading__rule {
+    flex: 0 1 4rem;
+    height: 1px;
+    background: var(--line-strong);
+  }
+
+  .section-heading__intro {
+    margin-top: var(--space-4);
+    max-width: var(--measure);
+  }
+</style>

@@ -1,0 +1,87 @@
+---
+/**
+ * Gabarit commun à toutes les pages : <head>, polices, en-tête, pied de page,
+ * et initialisation des scripts (navigation, apparitions, pétales).
+ */
+import '@fontsource-variable/fraunces/standard.css';
+import '@fontsource-variable/fraunces/standard-italic.css';
+import '@fontsource-variable/mulish/index.css';
+import '@fontsource-variable/mulish/wght-italic.css';
+import '../styles/tokens.css';
+import '../styles/base.css';
+
+/* Préchargement des deux fichiers de police utilisés dès le premier rendu (latin) */
+import frauncesUrl from '@fontsource-variable/fraunces/files/fraunces-latin-standard-normal.woff2?url';
+import mulishUrl from '@fontsource-variable/mulish/files/mulish-latin-wght-normal.woff2?url';
+
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { profile } from '../data/profile';
+import { url } from '../lib/url';
+
+interface Props {
+  /** Titre de l'onglet. Le nom d'Ela est ajouté automatiquement s'il n'y figure pas. */
+  title?: string;
+  description?: string;
+  /** Page d'accueil : la navigation pointe vers les ancres de sections */
+  isHome?: boolean;
+}
+
+const { title, description = profile.siteDescription, isHome = false } = Astro.props;
+const fullTitle = title ? `${title} — ${profile.name}` : profile.siteTitle;
+const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={profile.name} />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#f8f3ed" />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
+    <link rel="preload" href={frauncesUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={mulishUrl} as="font" type="font/woff2" crossorigin />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content="fr_FR" />
+    {canonical && <meta property="og:url" content={canonical} />}
+    <meta name="twitter:card" content="summary" />
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#contenu">Aller au contenu</a>
+    <Header isHome={isHome} />
+    <main id="contenu" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+    <script>
+      import { initNav } from '../scripts/nav';
+      import { initReveal } from '../scripts/reveal';
+      import { initPetals } from '../scripts/petals';
+
+      initNav();
+      initReveal();
+      initPetals();
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  main:focus {
+    outline: none;
+  }
+
+  /* Bloque le défilement de la page lorsque le menu mobile est ouvert */
+  html.nav-open {
+    overflow: hidden;
+  }
+</style>

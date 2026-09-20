@@ -1,0 +1,22 @@
+# Dépendances
+node_modules/
+
+# Sortie de build
+dist/
+.astro/
+
+# Environnement
+.env
+.env.*
+!.env.example
+
+# Système / éditeurs
+.DS_Store
+Thumbs.db
+*.log
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Documents sources confidentiels (rapport de stage, etc.) — jamais publiés
+private/

@@ -1,0 +1,193 @@
+---
+import SectionHeading from '../components/SectionHeading.astro';
+import Placeholder from '../components/Placeholder.astro';
+import { profile } from '../data/profile';
+
+const { education, studies } = profile;
+---
+
+<section id="formation" class="section section--tinted" aria-labelledby="education-title">
+  <div class="container">
+    <SectionHeading number="05" title="Formation" id="education-title" />
+
+    <div class="education">
+      <ol class="timeline list-plain">
+        {
+          education.map((entry, i) => (
+            <li class="timeline__item" data-reveal data-reveal-delay={String(i * 80)}>
+              <span class="timeline__dot" aria-hidden="true" />
+              <p class="timeline__period">
+                {entry.period ? entry.period : <Placeholder text="Dates" />}
+              </p>
+              <h3 class="timeline__title">
+                {entry.placeholder ? <Placeholder text={entry.title} /> : entry.title}
+              </h3>
+              <p class="timeline__place">
+                {entry.placeholder ? (
+                  <Placeholder text={entry.place} />
+                ) : (
+                  <>
+                    {entry.place}
+                    {entry.location && <span> — {entry.location}</span>}
+                  </>
+                )}
+              </p>
+              {entry.description && (
+                <p class="timeline__desc">
+                  {entry.placeholder ? <Placeholder text={entry.description} /> : entry.description}
+                </p>
+              )}
+            </li>
+          ))
+        }
+      </ol>
+
+      <aside id="poursuite-etudes" class="studies" aria-labelledby="studies-title" data-reveal data-reveal-delay="160">
+        <p class="eyebrow">Et ensuite</p>
+        <h3 id="studies-title" class="studies__title">Poursuite d’études</h3>
+        <p class="studies__goal">{studies.goal}</p>
+
+        <dl class="studies__facts">
+          <div>
+            <dt>Domaines d’intérêt</dt>
+            <dd>
+              <ul class="tag-list">
+                {studies.interests.map((i) => <li class="tag">{i}</li>)}
+              </ul>
+            </dd>
+          </div>
+          <div>
+            <dt>École ou formation visée</dt>
+            <dd>{studies.targetSchool ? studies.targetSchool : <Placeholder text="À préciser" />}</dd>
+          </div>
+          <div>
+            <dt>Spécialisation envisagée</dt>
+            <dd>
+              {studies.targetSpecialization ? studies.targetSpecialization : <Placeholder text="À préciser" />}
+            </dd>
+          </div>
+        </dl>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<style>
+  .education {
+    display: grid;
+    gap: var(--space-7);
+    align-items: start;
+  }
+
+  /* Frise */
+  .timeline {
+    position: relative;
+    padding-left: 1.75rem;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0.3rem;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 1px;
+    background: var(--line-strong);
+  }
+
+  .timeline__item {
+    position: relative;
+    padding-bottom: var(--space-6);
+  }
+
+  .timeline__item:last-child {
+    padding-bottom: 0;
+  }
+
+  .timeline__dot {
+    position: absolute;
+    left: -1.75rem;
+    top: 0.45rem;
+    width: 0.65rem;
+    height: 0.65rem;
+    background: var(--rose-2);
+    border: 1px solid var(--paper-2);
+    border-radius: 60% 0 60% 0;
+    transform: rotate(-10deg);
+  }
+
+  .timeline__period {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+  }
+
+  .timeline__title {
+    margin-top: var(--space-1);
+    font-size: var(--text-lg);
+  }
+
+  .timeline__place {
+    margin-top: var(--space-1);
+    color: var(--ink);
+  }
+
+  .timeline__desc {
+    margin-top: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--ink-soft);
+    max-width: 48ch;
+  }
+
+  /* Poursuite d'études */
+  .studies {
+    padding: var(--space-5) var(--space-6);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--petal-radius);
+  }
+
+  .studies__title {
+    margin-top: var(--space-2);
+  }
+
+  .studies__goal {
+    margin-top: var(--space-3);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--text-md);
+    font-variation-settings: 'opsz' 20;
+    color: var(--clay);
+  }
+
+  .studies__facts {
+    margin-top: var(--space-5);
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .studies__facts > div {
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--line);
+  }
+
+  .studies__facts dt {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  .studies__facts dd {
+    margin: 0.3rem 0 0;
+  }
+
+  @media (min-width: 48em) {
+    .education {
+      grid-template-columns: minmax(0, 1.4fr) minmax(18rem, 1fr);
+      gap: var(--space-8);
+    }
+  }
+</style>

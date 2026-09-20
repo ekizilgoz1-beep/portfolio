@@ -1,0 +1,15 @@
+---
+/**
+ * Zone à compléter. Affiche le texte fourni en style « brouillon » pour
+ * signaler clairement qu'une information reste à renseigner.
+ * Aucune donnée n'est inventée : seul le libellé de la zone est affiché.
+ */
+interface Props {
+  text?: string;
+  /** Élément de rendu (span par défaut) */
+  as?: 'span' | 'p';
+}
+const { text = 'À compléter', as: Tag = 'span' } = Astro.props;
+---
+
+<Tag class="placeholder" data-placeholder>{text}</Tag>

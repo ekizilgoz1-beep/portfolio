@@ -1,0 +1,259 @@
+---
+import { profile } from '../data/profile';
+import { url } from '../lib/url';
+
+interface Props {
+  isHome?: boolean;
+}
+const { isHome = false } = Astro.props;
+
+const links = [
+  { href: '#a-propos', label: 'À propos' },
+  { href: '#competences', label: 'Compétences' },
+  { href: '#projets', label: 'Projets' },
+  { href: '#stage', label: 'Stage' },
+  { href: '#formation', label: 'Formation' },
+  { href: '#contact', label: 'Contact' },
+];
+
+/* Sur une page secondaire, les ancres renvoient vers l'accueil */
+const href = (hash: string) => (isHome ? hash : url(`/${hash}`));
+---
+
+<header class="header" data-header>
+  <div class="container header__inner">
+    <a class="brand" href={url('/')} aria-label={`${profile.name} — accueil`}>
+      <span class="brand__mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+          <path d="M12 2c3.6 4.6 5.5 8.7 5.5 12.3S15.2 21.5 12 22c-3.2-.5-5.5-4-5.5-7.7S8.4 6.6 12 2Z" />
+        </svg>
+      </span>
+      <span class="brand__name">{profile.firstName} <em>K.</em></span>
+    </a>
+
+    <button
+      class="nav-toggle"
+      type="button"
+      data-nav-toggle
+      aria-expanded="false"
+      aria-controls="nav-panel"
+    >
+      <span class="nav-toggle__lines" aria-hidden="true"><i></i><i></i></span>
+      <span class="nav-toggle__label" data-nav-label>Menu</span>
+    </button>
+
+    <nav class="nav" id="nav-panel" aria-label="Navigation principale" data-nav-panel>
+      <ul class="nav__list list-plain">
+        {
+          links.map((l) => (
+            <li>
+              <a class="nav__link" href={href(l.href)} data-nav-link>
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--paper);
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--dur) ease;
+  }
+
+  .header.is-scrolled {
+    border-bottom-color: var(--line);
+  }
+
+  .header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    min-height: 4.25rem;
+  }
+
+  /* Marque */
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 500;
+    font-variation-settings: 'opsz' 24;
+    letter-spacing: 0.005em;
+  }
+
+  .brand em {
+    color: var(--clay);
+    font-weight: 400;
+  }
+
+  .brand__mark {
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: var(--petal-radius-sm);
+    background: var(--rose);
+    color: var(--clay);
+    transition: transform var(--dur-slow) var(--ease-out), background-color var(--dur) ease;
+  }
+
+  .brand:hover .brand__mark {
+    transform: rotate(-12deg);
+    background: var(--rose-2);
+  }
+
+  /* Navigation (large) */
+  .nav__list {
+    display: flex;
+    gap: clamp(1rem, 2.5vw, 2.25rem);
+  }
+
+  .nav__link {
+    position: relative;
+    display: inline-block;
+    padding: 0.35rem 0;
+    color: var(--ink-soft);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    transition: color var(--dur-fast) ease;
+  }
+
+  .nav__link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: var(--clay);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur) var(--ease-out);
+  }
+
+  .nav__link:hover,
+  .nav__link[aria-current] {
+    color: var(--ink);
+  }
+
+  .nav__link:hover::after,
+  .nav__link[aria-current]::after {
+    transform: scaleX(1);
+  }
+
+  /* Bouton menu (mobile) */
+  .nav-toggle {
+    display: none;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.5rem 0.25rem;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+  }
+
+  .nav-toggle__lines {
+    position: relative;
+    width: 1.25rem;
+    height: 0.75rem;
+  }
+
+  .nav-toggle__lines i {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1.5px;
+    background: currentColor;
+    border-radius: 2px;
+    transition: transform var(--dur) var(--ease-in-out), top var(--dur) var(--ease-in-out);
+  }
+
+  .nav-toggle__lines i:first-child {
+    top: 0;
+  }
+
+  .nav-toggle__lines i:last-child {
+    top: 100%;
+  }
+
+  .nav-toggle[aria-expanded='true'] .nav-toggle__lines i:first-child {
+    top: 50%;
+    transform: rotate(45deg);
+  }
+
+  .nav-toggle[aria-expanded='true'] .nav-toggle__lines i:last-child {
+    top: 50%;
+    transform: rotate(-45deg);
+  }
+
+  @media (max-width: 47.99em) {
+    .nav-toggle {
+      display: inline-flex;
+    }
+
+    .nav {
+      position: absolute;
+      inset: 100% 0 auto 0;
+      background: var(--paper);
+      border-bottom: 1px solid var(--line);
+      padding: var(--space-3) var(--gutter) var(--space-6);
+      max-height: calc(100dvh - 4.25rem);
+      overflow-y: auto;
+    }
+
+    .nav[hidden] {
+      display: none;
+    }
+
+    .nav__list {
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .nav__link {
+      display: block;
+      padding: 0.9rem 0;
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      font-weight: 500;
+      font-variation-settings: 'opsz' 24;
+      color: var(--ink);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav__link::after {
+      display: none;
+    }
+  }
+
+  /* En affichage large, l'attribut hidden posé par le script mobile est ignoré */
+  @media (min-width: 48em) {
+    .nav[hidden] {
+      display: block;
+    }
+  }
+
+  /* Sans JavaScript, le menu reste visible et le bouton est masqué */
+  :global(html:not(.js)) .nav-toggle {
+    display: none;
+  }
+</style>

@@ -1,0 +1,64 @@
+---
+import { getCollection } from 'astro:content';
+import SectionHeading from '../components/SectionHeading.astro';
+import ProjectEntry from '../components/ProjectEntry.astro';
+
+const all = (await getCollection('projets', ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+
+const groups = [
+  { key: 'scolaire', title: 'Projets scolaires', items: all.filter((p) => p.data.type === 'scolaire') },
+  { key: 'personnel', title: 'Projets personnels', items: all.filter((p) => p.data.type === 'personnel') },
+  { key: 'stage', title: 'Projets réalisés en stage', items: all.filter((p) => p.data.type === 'stage') },
+].filter((g) => g.items.length > 0);
+---
+
+<section id="projets" class="section section--tinted" aria-labelledby="projects-title">
+  <div class="container">
+    <SectionHeading
+      number="03"
+      title="Projets"
+      id="projects-title"
+      intro="Travaux menés en formation et projets personnels. Chaque fiche détaille le contexte, la démarche et les technologies utilisées lorsqu'elles sont connues."
+    />
+
+    {
+      groups.length === 0 ? (
+        <p class="lede" data-reveal>
+          Les projets seront ajoutés prochainement.
+        </p>
+      ) : (
+        <div class="projects">
+          {groups.map((group) => (
+            <div class="projects__group">
+              <h3 class="projects__group-title" data-reveal>
+                {group.title}
+              </h3>
+              <ol class="list-plain">
+                {group.items.map((project, i) => (
+                  <ProjectEntry project={project} index={i} />
+                ))}
+              </ol>
+            </div>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .projects {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  .projects__group-title {
+    font-size: var(--text-md);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--clay);
+    margin-bottom: var(--space-4);
+  }
+</style>

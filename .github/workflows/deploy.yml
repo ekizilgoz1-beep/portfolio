@@ -1,0 +1,67 @@
+# Déploiement sur GitHub Pages — ALTERNATIVE, lancement manuel uniquement.
+#
+# Le site est hébergé sur Cloudflare Pages (voir DEPLOIEMENT.md), qui construit
+# lui-même le site à chaque push. Ce workflow reste disponible si l'on veut
+# basculer sur GitHub Pages : activer Pages (Settings → Pages → Source :
+# « GitHub Actions ») puis lancer le workflow depuis l'onglet Actions, ou
+# remettre `push: branches: [main]` dans `on:` pour l'automatiser.
+#
+# L'URL publique et le chemin de base sont fournis automatiquement par
+# `actions/configure-pages` : cela fonctionne aussi bien pour
+#   https://<utilisateur>.github.io/<depot>/   (base = /<depot>)
+# que pour un nom de domaine personnalisé      (base = /).
+name: Déployer sur GitHub Pages
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Configurer GitHub Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Installer les dépendances
+        run: npm ci
+
+      - name: Construire le site
+        run: npm run build
+        env:
+          SITE_URL: ${{ steps.pages.outputs.origin }}
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}
+
+      - name: Téléverser le site construit
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publier
+        id: deployment
+        uses: actions/deploy-pages@v4

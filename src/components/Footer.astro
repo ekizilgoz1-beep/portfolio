@@ -1,0 +1,76 @@
+---
+import { profile } from '../data/profile';
+import { url } from '../lib/url';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <p class="footer__name">
+      {profile.name} <span aria-hidden="true">·</span> <span class="footer__role">BTS SIO SISR, {profile.school}</span>
+    </p>
+    <ul class="footer__links list-plain">
+      <li><a href={url('/#contact')}>Contact</a></li>
+      <li><a href={url('/mentions-legales/')}>Mentions légales</a></li>
+    </ul>
+    <p class="footer__note">© {year} — Site conçu et réalisé sans collecte de données personnelles.</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-top: 1px solid var(--line);
+    padding-block: var(--space-7) var(--space-6);
+    font-size: var(--text-sm);
+    color: var(--ink-soft);
+  }
+
+  .footer__inner {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .footer__name {
+    font-family: var(--font-display);
+    font-size: var(--text-md);
+    color: var(--ink);
+    font-variation-settings: 'opsz' 20;
+  }
+
+  .footer__role {
+    font-family: var(--font-text);
+    font-size: var(--text-sm);
+    color: var(--ink-soft);
+  }
+
+  .footer__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-5);
+  }
+
+  .footer__links a {
+    color: var(--ink-soft);
+  }
+
+  .footer__links a:hover {
+    color: var(--clay);
+  }
+
+  .footer__note {
+    color: var(--ink-soft);
+    font-size: var(--text-xs);
+  }
+
+  @media (min-width: 48em) {
+    .footer__inner {
+      grid-template-columns: 1fr auto;
+      align-items: baseline;
+    }
+
+    .footer__note {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

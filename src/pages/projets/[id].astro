@@ -1,0 +1,197 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Arrow from '../../components/Arrow.astro';
+import Placeholder from '../../components/Placeholder.astro';
+import { url } from '../../lib/url';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projets', ({ data }) => !data.draft);
+  return projects.map((project) => ({ params: { id: project.id }, props: { project } }));
+}
+
+const { project } = Astro.props;
+const { title, summary, type, period, technologies, link, linkLabel, placeholder } = project.data;
+const { Content } = await render(project);
+
+const typeLabel = { scolaire: 'Projet scolaire', personnel: 'Projet personnel', stage: 'Projet de stage' }[type];
+---
+
+<BaseLayout title={title} description={summary}>
+  <article class="project">
+    <header class="project__head">
+      <div class="container">
+        <a class="project__back" href={url('/#projets')}>
+          <Arrow direction="left" />
+          Tous les projets
+        </a>
+        <p class="eyebrow project__type" data-reveal>
+          {typeLabel}
+          {period && <span class="project__period"> · {period}</span>}
+        </p>
+        <h1 class="project__title" data-reveal data-reveal-delay="60">{title}</h1>
+        <p class="project__summary lede" data-reveal data-reveal-delay="120">{summary}</p>
+        {
+          placeholder && (
+            <p class="project__notice" data-reveal data-reveal-delay="160">
+              <Placeholder text="Fiche en cours de rédaction — le contenu ci-dessous est un canevas à compléter." />
+            </p>
+          )
+        }
+      </div>
+    </header>
+
+    <div class="container project__body">
+      <div class="prose" data-reveal>
+        <Content />
+      </div>
+
+      <aside class="project__aside" aria-label="Informations" data-reveal data-reveal-delay="100">
+        <dl class="project__facts">
+          <div>
+            <dt>Type</dt>
+            <dd>{typeLabel}</dd>
+          </div>
+          <div>
+            <dt>Période</dt>
+            <dd>{period ? period : <Placeholder text="À préciser" />}</dd>
+          </div>
+          <div>
+            <dt>Technologies</dt>
+            <dd>
+              {
+                technologies.length > 0 ? (
+                  <ul class="tag-list">
+                    {technologies.map((t) => (
+                      <li class="tag">{t}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <Placeholder text="À préciser" />
+                )
+              }
+            </dd>
+          </div>
+          {
+            link && (
+              <div>
+                <dt>Lien</dt>
+                <dd>
+                  <a href={link} rel="noopener">
+                    {linkLabel ?? link}
+                  </a>
+                </dd>
+              </div>
+            )
+          }
+        </dl>
+      </aside>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .project__head {
+    padding-block: var(--space-7) var(--space-6);
+    background: var(--paper-2);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .project__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--ink-soft);
+    text-decoration: none;
+    margin-bottom: var(--space-6);
+  }
+
+  .project__back :global(svg) {
+    width: 1em;
+    height: 1em;
+    transition: transform var(--dur) var(--ease-out);
+  }
+
+  .project__back:hover {
+    color: var(--clay);
+  }
+
+  .project__back:hover :global(svg) {
+    transform: translateX(-3px);
+  }
+
+  .project__type {
+    margin-bottom: var(--space-3);
+  }
+
+  .project__period {
+    text-transform: none;
+    letter-spacing: 0.02em;
+    font-weight: 500;
+  }
+
+  .project__title {
+    font-size: var(--text-xl);
+    font-variation-settings: 'opsz' 72;
+    max-width: 24ch;
+  }
+
+  .project__summary {
+    margin-top: var(--space-4);
+    max-width: var(--measure);
+  }
+
+  .project__notice {
+    margin-top: var(--space-4);
+    font-size: var(--text-sm);
+  }
+
+  .project__body {
+    display: grid;
+    gap: var(--space-7);
+    padding-block: var(--space-7) var(--space-9);
+    align-items: start;
+  }
+
+  .project__aside {
+    padding: var(--space-5);
+    border: 1px solid var(--line);
+    border-radius: var(--petal-radius);
+  }
+
+  .project__facts {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .project__facts > div + div {
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--line);
+  }
+
+  .project__facts dt {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  .project__facts dd {
+    margin: 0.25rem 0 0;
+  }
+
+  @media (min-width: 56em) {
+    .project__body {
+      grid-template-columns: minmax(0, 1fr) 18rem;
+      gap: var(--space-8);
+    }
+
+    .project__aside {
+      position: sticky;
+      top: 5.5rem;
+    }
+  }
+</style>

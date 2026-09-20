@@ -1,0 +1,77 @@
+/*
+ * Jetons de design — identité visuelle d'Ela Kizilgöz.
+ * Palette nude / crème / brun doux, sans marron trop foncé.
+ * Tous les contrastes texte/fond ont été vérifiés (≥ 4,5:1 pour le texte courant).
+ */
+:root {
+  /* Fonds */
+  --paper: #f8f3ed;        /* crème papier — fond principal */
+  --paper-2: #f2eae1;      /* crème légèrement plus chaud — sections alternées */
+  --sand: #e7dacb;         /* sable — surfaces, étiquettes */
+  --sand-2: #dfd0bf;       /* sable soutenu — survols */
+  --rose: #e9d2c8;         /* rosé poudré — pétales, touches */
+  --rose-2: #dfbfb3;
+
+  /* Traits */
+  --line: #dccfc0;         /* filet fin */
+  --line-strong: #c8b6a4;
+
+  /* Encre (texte) */
+  --ink: #4a3a31;          /* brun d'encre — texte principal (9,5:1 sur --paper) */
+  --ink-soft: #7a6355;     /* texte secondaire (5:1) */
+  --ink-muted: #9c8677;    /* décoratif uniquement (numéros, ornements) */
+
+  /* Accent argile */
+  --clay: #8f5d48;         /* liens, accents textuels (4,9:1) */
+  --clay-soft: #b8806a;    /* accents graphiques larges */
+  --clay-tint: #f0e2da;    /* fond d'accent très clair */
+  --taupe: #a89283;
+
+  /* Typographie */
+  --font-display: 'Fraunces Variable', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --font-text: 'Mulish Variable', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+
+  --text-xs: 0.78rem;
+  --text-sm: 0.9rem;
+  --text-base: 1.0625rem;
+  --text-md: 1.2rem;
+  --text-lg: clamp(1.35rem, 1.1rem + 1vw, 1.7rem);
+  --text-xl: clamp(1.8rem, 1.3rem + 2vw, 2.6rem);
+  --text-2xl: clamp(2.4rem, 1.6rem + 3.6vw, 4.2rem);
+
+  --leading-tight: 1.15;
+  --leading-snug: 1.35;
+  --leading-body: 1.7;
+
+  /* Espacements */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+  --space-9: clamp(4.5rem, 4rem + 5vw, 8rem);
+
+  /* Gabarit */
+  --measure: 62ch;
+  --container: 72rem;
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+
+  /* Forme signature : coins « pétale » (asymétriques) */
+  --petal-radius: 2.25rem 0.5rem 2.25rem 0.5rem;
+  --petal-radius-sm: 1.1rem 0.3rem 1.1rem 0.3rem;
+  --radius: 0.5rem;
+  --radius-pill: 999px;
+
+  /* Mouvement */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 180ms;
+  --dur: 320ms;
+  --dur-slow: 700ms;
+
+  /* Ombres — volontairement très douces, teintées de brun */
+  --shadow-soft: 0 1px 2px rgb(74 58 49 / 0.04), 0 12px 32px -16px rgb(74 58 49 / 0.18);
+}

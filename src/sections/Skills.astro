@@ -1,0 +1,108 @@
+---
+import SectionHeading from '../components/SectionHeading.astro';
+import Placeholder from '../components/Placeholder.astro';
+import { profile } from '../data/profile';
+
+/* Seuls les domaines contenant au moins une entrée sont affichés */
+const groups = profile.skills.filter((g) => g.items.length > 0);
+---
+
+<section id="competences" class="section" aria-labelledby="skills-title">
+  <div class="container">
+    <SectionHeading
+      number="02"
+      title="Compétences"
+      id="skills-title"
+      intro="Les compétences présentées ici correspondent à celles travaillées en formation, en projet et en stage."
+    />
+
+    <div class="skills">
+      {
+        groups.map((group, i) => (
+          <div class="skills__group" data-reveal data-reveal-delay={String(i * 80)}>
+            <h3 class="skills__title">{group.title}</h3>
+            {group.intro && <p class="skills__intro">{group.intro}</p>}
+            <ul class="skills__list list-plain">
+              {group.items.map((item) => (
+                <li class="skills__item">
+                  {item.placeholder ? (
+                    <Placeholder text={item.label} />
+                  ) : (
+                    <>
+                      <span class="skills__label">{item.label}</span>
+                      {item.detail && <span class="skills__detail">{item.detail}</span>}
+                    </>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .skills {
+    display: grid;
+    gap: var(--space-6) var(--space-8);
+  }
+
+  .skills__group {
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .skills__title {
+    font-size: var(--text-lg);
+  }
+
+  .skills__intro {
+    margin-top: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--ink-soft);
+    max-width: 38ch;
+  }
+
+  .skills__list {
+    margin-top: var(--space-4);
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .skills__item {
+    position: relative;
+    padding-left: 1.4rem;
+    line-height: 1.55;
+  }
+
+  /* Puce en forme de pétale */
+  .skills__item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.62em;
+    width: 0.5rem;
+    height: 0.5rem;
+    background: var(--rose-2);
+    border-radius: 60% 0 60% 0;
+    transform: rotate(-10deg);
+  }
+
+  .skills__label {
+    font-weight: 600;
+  }
+
+  .skills__detail {
+    display: block;
+    font-size: var(--text-sm);
+    color: var(--ink-soft);
+  }
+
+  @media (min-width: 40em) {
+    .skills {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>
