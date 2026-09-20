@@ -8,10 +8,11 @@ import { defineConfig } from 'astro/config';
  * fonctionne en local, sur GitHub Pages (sous-dossier /nom-du-depot/) et
  * sur un nom de domaine personnalisé. Voir DEPLOIEMENT.md.
  *
- *   SITE_URL  : URL publique complète, ex. https://ela-kizilgoz.fr
+ *   SITE_URL  : URL publique complète (par défaut l'adresse Cloudflare ci-dessous ;
+ *               à remplacer par le nom de domaine le jour où il y en a un)
  *   BASE_PATH : chemin de base, ex. /portfolio-ela (vide sur un domaine dédié)
  */
-const site = process.env.SITE_URL || undefined;
+const site = process.env.SITE_URL || 'https://portfolio.ekizilgoz1.workers.dev';
 const base = process.env.BASE_PATH || '/';
 
 export default defineConfig({

@@ -1,0 +1,14 @@
+// Configuration Cloudflare Workers (hébergement du site statique).
+// Le nom doit correspondre au projet créé dans le tableau de bord Cloudflare.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "portfolio",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "./dist",
+    // Sert la page 404 du site au lieu d'une réponse vide
+    "not_found_handling": "404-page",
+    // /projets/x et /projets/x/ mènent à la même page
+    "html_handling": "auto-trailing-slash"
+  }
+}
